@@ -19,6 +19,7 @@ namespace ParseFile
         String rawFile = "";
         List<List<ParseInfo>> measurments;
         List<EniquePoint> eniquePoints;
+        List<ObserverPair> observerPairs;
         
 
         public Form1()
@@ -29,8 +30,47 @@ namespace ParseFile
         private void btnOpenFile_Click(object sender, EventArgs e)
         {
             OpenFile2();
+            initObserverPair();
 
             //dataGridView1.DataSource = parseInfo;
+            //dfsgsdklhsgefuighudsafghfzdgh'sd[hf
+        }
+        private void initObserverPair()
+        {
+            observerPairs = new List<ObserverPair>();
+            ObserverPair observerPair1 = new ObserverPair();
+            observerPair1.observer1 = "Point 1";
+            observerPair1.observer2 = "Point 2";
+            observerPair1.from1to2 = 50;
+            List<PairPoint> pairPoints1 = new List<PairPoint>();
+            PairPoint pairPoint1 = new PairPoint();
+            pairPoint1.ssid = "Pair 1";
+            pairPoint1.toObserver1 = 35;
+            pairPoint1.toObserver2 = 35;
+            PairPoint pairPoint2 = new PairPoint();
+            pairPoint2.ssid = "Pair 2";
+            pairPoint2.toObserver1 = 45;
+            pairPoint2.toObserver2 = 45;
+            pairPoints1.Add(pairPoint1);
+            pairPoints1.Add(pairPoint2);
+            observerPairs.Add(observerPair1);
+            ObserverPair observerPair2 = new ObserverPair();
+            observerPair2.observer1 = "Point 2";
+            observerPair2.observer2 = "Point 3";
+            observerPair2.from1to2 = 30;
+            List<PairPoint> pairPoints2 = new List<PairPoint>();
+            PairPoint pairPoint3 = new PairPoint();
+            pairPoint3.ssid = "Pair 3";
+            pairPoint3.toObserver1 = 20;
+            pairPoint3.toObserver2 = 20;
+            PairPoint pairPoint4 = new PairPoint();
+            pairPoint4.ssid = "Pair 4";
+            pairPoint4.toObserver1 = 25;
+            pairPoint4.toObserver2 = 25;
+            pairPoints2.Add(pairPoint3);
+            pairPoints2.Add(pairPoint4);
+            observerPairs.Add(observerPair2);
+            //fsdfsdfs
         }
 
         private void OpenFile2()

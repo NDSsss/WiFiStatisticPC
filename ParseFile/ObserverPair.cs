@@ -8,5 +8,10 @@ namespace ParseFile
 {
     class ObserverPair
     {
+        public string observer1 { get; set; }
+        public string observer2 { get; set; }
+        public int from1to2 { get; set; }
+        public List<PairPoint> pairPoints { get; set; }
+
     }
 }
