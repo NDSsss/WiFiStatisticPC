@@ -30,9 +30,10 @@
         {
             this.btnOpenFile = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.label1 = new System.Windows.Forms.Label();
             this.ssid = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.timesUsed = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label1 = new System.Windows.Forms.Label();
+            this.zedGraphControl = new ZedGraph.ZedGraphControl();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -54,18 +55,9 @@
             this.timesUsed});
             this.dataGridView1.Location = new System.Drawing.Point(12, 57);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(754, 381);
+            this.dataGridView1.Size = new System.Drawing.Size(263, 381);
             this.dataGridView1.TabIndex = 1;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(117, 13);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "label1";
             // 
             // ssid
             // 
@@ -77,11 +69,31 @@
             this.timesUsed.HeaderText = "timesUsed";
             this.timesUsed.Name = "timesUsed";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(117, 13);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "label1";
+            // 
+            // zedGraphControl
+            // 
+            this.zedGraphControl.IsShowPointValues = false;
+            this.zedGraphControl.Location = new System.Drawing.Point(281, 57);
+            this.zedGraphControl.Name = "zedGraphControl";
+            this.zedGraphControl.PointValueFormat = "G";
+            this.zedGraphControl.Size = new System.Drawing.Size(498, 381);
+            this.zedGraphControl.TabIndex = 3;
+            this.zedGraphControl.Load += new System.EventHandler(this.zedGraphControl1_Load);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(778, 450);
+            this.Controls.Add(this.zedGraphControl);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.btnOpenFile);
@@ -100,6 +112,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridViewTextBoxColumn ssid;
         private System.Windows.Forms.DataGridViewTextBoxColumn timesUsed;
+        private ZedGraph.ZedGraphControl zedGraphControl;
     }
 }
 
