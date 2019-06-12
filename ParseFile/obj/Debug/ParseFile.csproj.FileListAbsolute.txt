@@ -32,3 +32,9 @@ C:\Users\колян\Desktop\димка2\WiFiStatisticPC\ParseFile\obj\Debug\Pars
 C:\Users\колян\Desktop\димка2\WiFiStatisticPC\ParseFile\obj\Debug\ParseFile.pdb
 C:\Users\колян\Desktop\димка2\WiFiStatisticPC\ParseFile\bin\Debug\ZedGraph.dll
 C:\Users\колян\Desktop\димка2\WiFiStatisticPC\ParseFile\obj\Debug\ParseFile.csproj.CopyComplete
+C:\Users\NDS\Desktop\Диплом\fromGit2\WiFiStatisticPC\ParseFile\bin\Debug\ParseFile.exe
+C:\Users\NDS\Desktop\Диплом\fromGit2\WiFiStatisticPC\ParseFile\bin\Debug\ParseFile.pdb
+C:\Users\NDS\Desktop\Диплом\fromGit2\WiFiStatisticPC\ParseFile\obj\Debug\ParseFile.csprojResolveAssemblyReference.cache
+C:\Users\NDS\Desktop\Диплом\fromGit2\WiFiStatisticPC\ParseFile\obj\Debug\ParseFile.Form1.resources
+C:\Users\NDS\Desktop\Диплом\fromGit2\WiFiStatisticPC\ParseFile\obj\Debug\ParseFile.Properties.Resources.resources
+C:\Users\NDS\Desktop\Диплом\fromGit2\WiFiStatisticPC\ParseFile\obj\Debug\ParseFile.csproj.GenerateResource.Cache

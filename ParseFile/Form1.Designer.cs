@@ -30,16 +30,19 @@
         {
             this.btnOpenFile = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.ssid = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.timesUsed = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.label1 = new System.Windows.Forms.Label();
             this.zedGraphControl = new ZedGraph.ZedGraphControl();
+            this.tbPosx = new System.Windows.Forms.TextBox();
+            this.labelposx = new System.Windows.Forms.Label();
+            this.labelposy = new System.Windows.Forms.Label();
+            this.tbPosy = new System.Windows.Forms.TextBox();
+            this.cbSelectedMeasure = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // btnOpenFile
             // 
-            this.btnOpenFile.Location = new System.Drawing.Point(12, 12);
+            this.btnOpenFile.Location = new System.Drawing.Point(56, 64);
             this.btnOpenFile.Name = "btnOpenFile";
             this.btnOpenFile.Size = new System.Drawing.Size(98, 39);
             this.btnOpenFile.TabIndex = 0;
@@ -50,51 +53,86 @@
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.ssid,
-            this.timesUsed});
-            this.dataGridView1.Location = new System.Drawing.Point(12, 57);
+            this.dataGridView1.Location = new System.Drawing.Point(12, 109);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(263, 381);
+            this.dataGridView1.Size = new System.Drawing.Size(368, 381);
             this.dataGridView1.TabIndex = 1;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
-            // 
-            // ssid
-            // 
-            this.ssid.HeaderText = "SSID";
-            this.ssid.Name = "ssid";
-            // 
-            // timesUsed
-            // 
-            this.timesUsed.HeaderText = "timesUsed";
-            this.timesUsed.Name = "timesUsed";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(117, 13);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "label1";
             // 
             // zedGraphControl
             // 
             this.zedGraphControl.IsShowPointValues = false;
-            this.zedGraphControl.Location = new System.Drawing.Point(281, 57);
+            this.zedGraphControl.Location = new System.Drawing.Point(521, 64);
             this.zedGraphControl.Name = "zedGraphControl";
             this.zedGraphControl.PointValueFormat = "G";
-            this.zedGraphControl.Size = new System.Drawing.Size(498, 381);
+            this.zedGraphControl.Size = new System.Drawing.Size(588, 443);
             this.zedGraphControl.TabIndex = 3;
             this.zedGraphControl.Load += new System.EventHandler(this.zedGraphControl1_Load);
+            this.zedGraphControl.Click += new System.EventHandler(this.zedGraphControl_Click);
+            // 
+            // tbPosx
+            // 
+            this.tbPosx.Location = new System.Drawing.Point(54, 12);
+            this.tbPosx.Name = "tbPosx";
+            this.tbPosx.Size = new System.Drawing.Size(100, 20);
+            this.tbPosx.TabIndex = 4;
+            // 
+            // labelposx
+            // 
+            this.labelposx.AutoSize = true;
+            this.labelposx.Location = new System.Drawing.Point(7, 15);
+            this.labelposx.Name = "labelposx";
+            this.labelposx.Size = new System.Drawing.Size(33, 13);
+            this.labelposx.TabIndex = 5;
+            this.labelposx.Text = "Pos x";
+            this.labelposx.Click += new System.EventHandler(this.label2_Click);
+            // 
+            // labelposy
+            // 
+            this.labelposy.AutoSize = true;
+            this.labelposy.Location = new System.Drawing.Point(7, 41);
+            this.labelposy.Name = "labelposy";
+            this.labelposy.Size = new System.Drawing.Size(33, 13);
+            this.labelposy.TabIndex = 7;
+            this.labelposy.Text = "Pos y";
+            // 
+            // tbPosy
+            // 
+            this.tbPosy.Location = new System.Drawing.Point(54, 38);
+            this.tbPosy.Name = "tbPosy";
+            this.tbPosy.Size = new System.Drawing.Size(100, 20);
+            this.tbPosy.TabIndex = 6;
+            // 
+            // cbSelectedMeasure
+            // 
+            this.cbSelectedMeasure.FormattingEnabled = true;
+            this.cbSelectedMeasure.Location = new System.Drawing.Point(196, 33);
+            this.cbSelectedMeasure.Name = "cbSelectedMeasure";
+            this.cbSelectedMeasure.Size = new System.Drawing.Size(184, 21);
+            this.cbSelectedMeasure.TabIndex = 8;
+            this.cbSelectedMeasure.SelectedIndexChanged += new System.EventHandler(this.cbSelectedMeasure_SelectedIndexChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(193, 12);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(80, 13);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Select measure";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(778, 450);
-            this.Controls.Add(this.zedGraphControl);
+            this.ClientSize = new System.Drawing.Size(1121, 600);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.cbSelectedMeasure);
+            this.Controls.Add(this.labelposy);
+            this.Controls.Add(this.tbPosy);
+            this.Controls.Add(this.labelposx);
+            this.Controls.Add(this.tbPosx);
+            this.Controls.Add(this.zedGraphControl);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.btnOpenFile);
             this.Name = "Form1";
@@ -109,10 +147,13 @@
 
         private System.Windows.Forms.Button btnOpenFile;
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ssid;
-        private System.Windows.Forms.DataGridViewTextBoxColumn timesUsed;
         private ZedGraph.ZedGraphControl zedGraphControl;
+        private System.Windows.Forms.TextBox tbPosx;
+        private System.Windows.Forms.Label labelposx;
+        private System.Windows.Forms.Label labelposy;
+        private System.Windows.Forms.TextBox tbPosy;
+        private System.Windows.Forms.ComboBox cbSelectedMeasure;
+        private System.Windows.Forms.Label label1;
     }
 }
 

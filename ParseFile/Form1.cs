@@ -21,6 +21,8 @@ namespace ParseFile
         List<List<ParseInfo>> measurments;
         List<EniquePoint> eniquePoints;
         List<ObserverPair> observerPairs;
+        int selectedMeasure = 0;
+        Area area;
 
         //Полотно для рисования
         GraphPane pane;
@@ -28,14 +30,19 @@ namespace ParseFile
         public Form1()
         {
             InitializeComponent();
-
+            area = new Area();
+            List<ObserverPoint> observerPoints = new List<ObserverPoint>();
+            area.pointsForDraw = new List<PairedPointsForDraw>();
+            area.observerPoints = observerPoints;
             pane = zedGraphControl.GraphPane;
 
+
             //пример как добавлять точки
-            DrawGraph(pane, 40, 40, 30);
-            DrawGraph(pane, 90, 40, 30);
-            DrawGraph(pane, 90, 40, 20);
-            DrawGraph(pane, 100, 40, 20);
+//            DrawGraph(pane, 40, 60, 30);
+//            DrawGraph(pane, 40, 40, 30);
+//            DrawGraph(pane, 90, 40, 30);
+//            DrawGraph(pane, 90, 40, 20);
+//            DrawGraph(pane, 120, 40, 20);
         }
 
         private void btnOpenFile_Click(object sender, EventArgs e)
@@ -128,14 +135,18 @@ namespace ParseFile
         public void sortPoints()
         {
             eniquePoints = new List<EniquePoint>();
-            measurments = new List<List<ParseInfo>>();
             string splitMeasure = "Time Stamp|SSID|BSSID|Strength|Primary Channel|Primary Frequency|Center Channel|Center Frequency|Width (Range)|Distance|Security";
             string[] stringmeasurmentsRawSeparators = new string[] { "Time Stamp|SSID|BSSID|Strength|Primary Channel|Primary Frequency|Center Channel|Center Frequency|Width (Range)|Distance|Security"};
             string[] measurmentsRaw = rawFile.Split(stringmeasurmentsRawSeparators, StringSplitOptions.None);
+            ObserverPoint currentObserverPoint = new ObserverPoint();
+            currentObserverPoint.posx = Int32.Parse(tbPosx.Text);
+            currentObserverPoint.posy = Int32.Parse(tbPosy.Text);
+            currentObserverPoint.measures = new List<OneMeasure>();
             int i = 1;
             for (; i < measurmentsRaw.Length; i++)
             { 
-                List<ParseInfo> oneMeasurment = new List<ParseInfo>();
+                OneMeasure oneMeasure = new OneMeasure();
+                oneMeasure.points = new List<WiFiPoint>();
                 string[] parseinfoRawSeparator = new string[] { "qqqqq" };
                 string[] parseinfoRaw = measurmentsRaw[i].Split(parseinfoRawSeparator, StringSplitOptions.None);
                 int k = 0;
@@ -143,7 +154,7 @@ namespace ParseFile
                 {
                     string[] s = parseinfoRaw[k].Split('|');
 
-                    ParseInfo currentParseInfo = new ParseInfo()
+                    WiFiPoint wifiPoint = new WiFiPoint()
                     {
                         timeStamp = s[0],
                         SSId = s[1],
@@ -157,36 +168,139 @@ namespace ParseFile
                         Distance = s[9],
                         Security = s[10]
                     };
-                    oneMeasurment.Add(currentParseInfo);
-                    bool isUnique = true;
-                    for (int uniquePointsIterator = 0; uniquePointsIterator < eniquePoints.Count; uniquePointsIterator++)
+                    oneMeasure.points.Add(wifiPoint);
+                }
+                currentObserverPoint.measures.Add(oneMeasure);
+            }
+            if (area.observerPoints.Count == 0)
+            {
+                area.minMeasures = currentObserverPoint.measures.Count;
+            }
+            else
+            {
+                if(currentObserverPoint.measures.Count< area.minMeasures)
+                {
+                    area.minMeasures = currentObserverPoint.measures.Count;
+                }
+            }
+            area.observerPoints.Add(currentObserverPoint);
+            preparePointsForDraw();
+        }
+
+        private void preparePointsForDraw()
+        {
+            if(area.observerPoints.Count > 1)
+            {
+                for (int i = 1; i < area.observerPoints.Count; i++)
+                {
+                    ObserverPoint observerPointOne = area.observerPoints[i-1];
+                    ObserverPoint observerPointTwo = area.observerPoints[i];
+                    PairedPointsForDraw currentPointsForDraw = new PairedPointsForDraw();
+                    currentPointsForDraw.measuresOfCommonPoints = new List<List<CommonPoint>>();
+                    currentPointsForDraw.pointOnePosX = observerPointOne.posx;
+                    currentPointsForDraw.pointOnePosY = observerPointOne.posy;
+                    currentPointsForDraw.pointTwoPosX = observerPointTwo.posx;
+                    currentPointsForDraw.pointTwoPosY = observerPointTwo.posy;
+                    for (int measure = 0; measure < area.minMeasures; measure++)
                     {
-                        if(eniquePoints[uniquePointsIterator].SSId == currentParseInfo.SSId)
+                        List<WiFiPoint> pointOnePoints = observerPointOne.measures[measure].points;
+                        List<WiFiPoint> pointTwoPoints = observerPointTwo.measures[measure].points;
+                        List<CommonPoint> commonPointsForCurrentMeasure = new List<CommonPoint>();
+                        for(int pointOneIterator = 0; pointOneIterator < pointOnePoints.Count; pointOneIterator++)
                         {
-                            eniquePoints[uniquePointsIterator].timesUsed++;
-                            isUnique = false;
-                            break;
+                            for(int pointTwoIterator = 0; pointTwoIterator < pointTwoPoints.Count; pointTwoIterator++)
+                            {
+                                if(pointOnePoints[pointOneIterator].SSId.Equals(pointTwoPoints[pointTwoIterator].SSId, StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    CommonPoint commonPoint = new CommonPoint();
+                                    commonPoint.ssid = pointOnePoints[pointOneIterator].SSId;
+                                    commonPoint.metersToPointOne = Int32.Parse(pointOnePoints[pointOneIterator].Distance.Replace("~", "").Split('.')[0]);
+                                    commonPoint.metersToPointTwo = Int32.Parse(pointTwoPoints[pointTwoIterator].Distance.Replace("~", "").Split('.')[0]);
+                                    commonPointsForCurrentMeasure.Add(commonPoint);
+                                }
+                            }
                         }
+                        currentPointsForDraw.measuresOfCommonPoints.Add(commonPointsForCurrentMeasure);
                     }
-                    if (isUnique)
+                    area.pointsForDraw.Add(currentPointsForDraw);
+                }
+                Console.WriteLine("Points Prepared for draw");
+                Console.WriteLine("Points Sorted");
+                List<int> cbSelectedMeasureDataSource = new List<int>();
+                for (int cbSelectedMeasureDataSourceIndex = 0; cbSelectedMeasureDataSourceIndex < area.minMeasures; cbSelectedMeasureDataSourceIndex++)
+                {
+                    cbSelectedMeasureDataSource.Add(cbSelectedMeasureDataSourceIndex);
+                }
+                cbSelectedMeasure.DataSource = cbSelectedMeasureDataSource;
+                
+            }
+        }
+
+        private void drawPoints()
+        {
+            for(int pairedPointsIterator = 0; pairedPointsIterator< area.pointsForDraw.Count; pairedPointsIterator++)
+            {
+                PairedPointsForDraw currentPairedPointsForDraw = area.pointsForDraw[pairedPointsIterator];
+                if (currentPairedPointsForDraw.measuresOfCommonPoints[selectedMeasure].Count > 0)
+                {
+                    for (int pointsIterator = 0; pointsIterator < currentPairedPointsForDraw.measuresOfCommonPoints[selectedMeasure].Count; pointsIterator++)
                     {
-                        EniquePoint eniquePoint = new EniquePoint();
-                        eniquePoint.SSId = currentParseInfo.SSId;
-                        eniquePoint.timesUsed = 1;
-                        eniquePoints.Add(eniquePoint);
+                        DrawGraph(pane,
+                            currentPairedPointsForDraw.pointOnePosX,
+                            currentPairedPointsForDraw.pointOnePosY,
+                            currentPairedPointsForDraw.measuresOfCommonPoints[selectedMeasure][pointsIterator].metersToPointOne);
+                        DrawGraph(pane,
+                            currentPairedPointsForDraw.pointTwoPosX,
+                            currentPairedPointsForDraw.pointTwoPosY,
+                            currentPairedPointsForDraw.measuresOfCommonPoints[selectedMeasure][pointsIterator].metersToPointTwo);
+                    }
+                } else
+                {
+                    DrawGraph(pane,
+                            currentPairedPointsForDraw.pointOnePosX,
+                            currentPairedPointsForDraw.pointOnePosY,
+                            1);
+                    DrawGraph(pane,
+                            currentPairedPointsForDraw.pointTwoPosX,
+                            currentPairedPointsForDraw.pointTwoPosY,
+                            1);
+                }
+            }
+            Console.WriteLine("Points draw");
+            bindDataGridView();
+        }
+
+        private void bindDataGridView()
+        {
+            int maxPoints = 0;
+            DataTable dataTable = new DataTable();
+            for(int i = 0; i < area.observerPoints.Count; i++)
+            {
+                if(area.observerPoints[i].measures[selectedMeasure].points.Count > maxPoints)
+                {
+                    maxPoints = area.observerPoints[i].measures[selectedMeasure].points.Count;
+                }
+                string column = "Point" + i.ToString();
+                dataTable.Columns.Add(column);
+            }
+
+            for(int rowIterator =0; rowIterator < maxPoints; rowIterator++)
+            {
+                DataRow _ravi = dataTable.NewRow();
+                for(int columnIterator =0; columnIterator < area.observerPoints.Count; columnIterator++)
+                {
+                    if (rowIterator < area.observerPoints[columnIterator].measures[selectedMeasure].points.Count)
+                    {
+                        _ravi[columnIterator] = area.observerPoints[columnIterator].measures[selectedMeasure].points[rowIterator].SSId;
+                    } else
+                    {
+                        _ravi[columnIterator] = "";
                     }
                 }
-                measurments.Add(oneMeasurment);
+                dataTable.Rows.Add(_ravi);
             }
-            label1.Text = eniquePoints.Count.ToString();
-            List<EniquePoint> eniquePointsSorted = eniquePoints.OrderBy(x => x.timesUsed).ToList();
-            for (int o = eniquePointsSorted.Count -1; o >=0; o--)
-            {
-                DataGridViewRow row = (DataGridViewRow)dataGridView1.Rows[0].Clone();
-                row.Cells[0].Value = eniquePointsSorted[o].SSId;
-                row.Cells[1].Value = eniquePointsSorted[o].timesUsed.ToString();
-                dataGridView1.Rows.Add(row);
-            }
+
+            dataGridView1.DataSource = dataTable;
         }
 
         public void OpenFile()
@@ -242,6 +356,24 @@ namespace ParseFile
                                     });
                                 }
                             }
+
+                            //bool isUnique = true;
+                            //for (int uniquePointsIterator = 0; uniquePointsIterator < eniquePoints.Count; uniquePointsIterator++)
+                            //{
+                            //    if(eniquePoints[uniquePointsIterator].SSId == currentParseInfo.SSId)
+                            //    {
+                            //        eniquePoints[uniquePointsIterator].timesUsed++;
+                            //        isUnique = false;
+                            //        break;
+                            //    }
+                            //}
+                            //if (isUnique)
+                            //{
+                            //   EniquePoint eniquePoint = new EniquePoint();
+                            //   eniquePoint.SSId = currentParseInfo.SSId;
+                            //   eniquePoint.timesUsed = 1;
+                            //    eniquePoints.Add(eniquePoint);
+                            //}
                             Console.WriteLine("фаил считан");
                         }
                     }
@@ -334,6 +466,24 @@ namespace ParseFile
         private double Fy(double u, int Y0, int R)
         {
             return Y0 + R * Math.Sin(u * Math.PI / 180);
+        }
+
+        private void zedGraphControl_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cbSelectedMeasure_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            selectedMeasure = cbSelectedMeasure.SelectedIndex;
+            pane.CurveList.Clear();
+            drawPoints();
+            Console.WriteLine("Index changed");
         }
     }
         
