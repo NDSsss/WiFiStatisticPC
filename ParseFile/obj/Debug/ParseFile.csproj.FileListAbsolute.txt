@@ -17,3 +17,6 @@ C:\Users\NDS\Desktop\Диплом\ParseFile\ParseFile\ParseFile\obj\Debug\ParseF
 C:\Users\NDS\Desktop\Диплом\ParseFile\ParseFile\ParseFile\obj\Debug\ParseFile.Form1.resources
 C:\Users\NDS\Desktop\Диплом\ParseFile\ParseFile\ParseFile\obj\Debug\ParseFile.Properties.Resources.resources
 C:\Users\NDS\Desktop\Диплом\ParseFile\ParseFile\ParseFile\obj\Debug\ParseFile.csproj.GenerateResource.Cache
+C:\Users\NDS\Desktop\Диплом\fromGit2\WiFiStatisticPC\ParseFile\bin\Debug\ParseFile.exe.config
+C:\Users\NDS\Desktop\Диплом\fromGit2\WiFiStatisticPC\ParseFile\obj\Debug\ParseFile.exe
+C:\Users\NDS\Desktop\Диплом\fromGit2\WiFiStatisticPC\ParseFile\obj\Debug\ParseFile.pdb
