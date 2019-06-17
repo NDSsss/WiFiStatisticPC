@@ -191,6 +191,7 @@ namespace ParseFile
         {
             if(area.observerPoints.Count > 1)
             {
+                area.pointsForDraw.Clear();
                 for (int i = 1; i < area.observerPoints.Count; i++)
                 {
                     ObserverPoint observerPointOne = area.observerPoints[i-1];
@@ -208,9 +209,10 @@ namespace ParseFile
                         List<CommonPoint> commonPointsForCurrentMeasure = new List<CommonPoint>();
                         for(int pointOneIterator = 0; pointOneIterator < pointOnePoints.Count; pointOneIterator++)
                         {
-                            for(int pointTwoIterator = 0; pointTwoIterator < pointTwoPoints.Count; pointTwoIterator++)
+                            for (int pointTwoIterator = 0; pointTwoIterator < pointTwoPoints.Count; pointTwoIterator++)
                             {
-                                if(pointOnePoints[pointOneIterator].SSId.Equals(pointTwoPoints[pointTwoIterator].SSId, StringComparison.InvariantCultureIgnoreCase))
+                                if (!pointOnePoints[pointOneIterator].SSId.Equals("", StringComparison.InvariantCultureIgnoreCase)) { 
+                                if (pointOnePoints[pointOneIterator].SSId.Equals(pointTwoPoints[pointTwoIterator].SSId, StringComparison.InvariantCultureIgnoreCase))
                                 {
                                     CommonPoint commonPoint = new CommonPoint();
                                     commonPoint.ssid = pointOnePoints[pointOneIterator].SSId;
@@ -218,6 +220,7 @@ namespace ParseFile
                                     commonPoint.metersToPointTwo = Int32.Parse(pointTwoPoints[pointTwoIterator].Distance.Replace("~", "").Split('.')[0]);
                                     commonPointsForCurrentMeasure.Add(commonPoint);
                                 }
+                            }
                             }
                         }
                         currentPointsForDraw.measuresOfCommonPoints.Add(commonPointsForCurrentMeasure);
@@ -248,26 +251,55 @@ namespace ParseFile
                         DrawGraph(pane,
                             currentPairedPointsForDraw.pointOnePosX,
                             currentPairedPointsForDraw.pointOnePosY,
-                            currentPairedPointsForDraw.measuresOfCommonPoints[selectedMeasure][pointsIterator].metersToPointOne);
+                            currentPairedPointsForDraw.measuresOfCommonPoints[selectedMeasure][pointsIterator].metersToPointOne, pairedPointsIterator);
                         DrawGraph(pane,
                             currentPairedPointsForDraw.pointTwoPosX,
                             currentPairedPointsForDraw.pointTwoPosY,
-                            currentPairedPointsForDraw.measuresOfCommonPoints[selectedMeasure][pointsIterator].metersToPointTwo);
+                            currentPairedPointsForDraw.measuresOfCommonPoints[selectedMeasure][pointsIterator].metersToPointTwo, pairedPointsIterator);
                     }
                 } else
                 {
                     DrawGraph(pane,
                             currentPairedPointsForDraw.pointOnePosX,
                             currentPairedPointsForDraw.pointOnePosY,
-                            1);
+                            1, pairedPointsIterator);
                     DrawGraph(pane,
                             currentPairedPointsForDraw.pointTwoPosX,
                             currentPairedPointsForDraw.pointTwoPosY,
-                            1);
+                            1, pairedPointsIterator);
                 }
             }
             Console.WriteLine("Points draw");
             bindDataGridView();
+        }
+
+        private Color getColorByPosition(int position)
+        {
+            switch (position % 10)
+            {
+                case 0:
+                    return Color.Black;
+                case 1:
+                    return Color.Yellow;
+                case 2:
+                    return Color.Green;
+                case 3:
+                    return Color.Blue;
+                case 4:
+                    return Color.Black;
+                case 5:
+                    return Color.Yellow;
+                case 6:
+                    return Color.Green;
+                case 7:
+                    return Color.Blue;
+                case 8:
+                    return Color.Black;
+                case 9:
+                    return Color.Yellow;
+                default:
+                    return Color.Green;
+            }
         }
 
         private void bindDataGridView()
@@ -402,7 +434,7 @@ namespace ParseFile
         /// <param name="X0">Координата центра Х.</param>
         /// <param name="Y0">Координата центра Y.</param>
         /// <param name="Radius">Радиус.</param>
-        private void DrawGraph(GraphPane pane, int X0, int Y0, int Radius)
+        private void DrawGraph(GraphPane pane, int X0, int Y0, int Radius, int position)
         {
             //GraphPane pane = zedGraphControl.GraphPane;
 
@@ -444,8 +476,8 @@ namespace ParseFile
             }
 
             // Создадим кривую             
-            LineItem myCurve = pane.AddCurve("", pointsOfTheCircle, Color.Blue, SymbolType.None);
-            LineItem myCurve2 = pane.AddCurve("", X0Y0, Color.Red, SymbolType.Diamond);
+            LineItem myCurve = pane.AddCurve("", pointsOfTheCircle, getColorByPosition(position), SymbolType.None);
+            LineItem myCurve2 = pane.AddCurve("", X0Y0, Color.Red, SymbolType.Star);
             
             //настройки для начала координат
             myCurve2.Line.IsVisible = false;
